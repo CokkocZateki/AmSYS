@@ -34,6 +34,7 @@ class SecurityController extends Controller
         // Note: If null is returned then no settings exists, proceed to
         // generate them.
         $isDown = $this->get("helper")->getSetting("system_maintenance");
+        $enableGuest = $this->get("helper")->getSetting("buyback_enable_guest");
 
         if($isDown != null) {
 
@@ -53,7 +54,8 @@ class SecurityController extends Controller
                     // last username entered by the user
                     $lastUsername = $authenticationUtils->getLastUsername();
 
-                    return $this->render('security/login.html.twig', array('last_username' => $lastUsername, 'error' => $error));
+                    return $this->render('security/login.html.twig', array('last_username' => $lastUsername, 'error' => $error,
+                        'enable_guest' => $enableGuest));
                 } else {
 
                     // This is the IGB, display the error

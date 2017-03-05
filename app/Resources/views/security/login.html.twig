@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="{{ asset('/css/font-awesome.min.css') }}" />
         <link rel="stylesheet" href="{{ asset('/css/AdminLTE.min.css') }}" />
         <link rel="stylesheet" href="{{ asset('/css/blue.css') }}" />
+        <link rel="stylesheet" href="{{ asset('/css/site.css') }}" />
         {% block stylesheets %}{% endblock %}
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -58,12 +59,14 @@
                         <!-- /.col -->
                     </div>
                 </form>
+                {% if enable_guest == true %}
                 <hr/>
                 <div class="row">
                     <div class="col-xs-12">
                         <a href="{{path('guest_buyback')}}" class="btn btn-primary btn-block btn-flat">Sell to us without an Account!</a>
                     </div>
                 </div>
+                {% endif %}
 
             </div>
         <!-- /.login-box-body -->

@@ -11,7 +11,7 @@
                     </div><!-- /.box-header -->
                     <div class="box-body">
                         <div class="row">
-                            <div class="form-group">
+                            <div class="form-group colored-row clearfix">
                                 <div class="col-sm-8">
                                     <label for="source_id" class="control-label">System Id</label>
                                     <p>System Id to pull prices from.  You can find a list <a target="_blank" href="http://eve-marketdata.com/developers/solarsystems.php">here</a>.</p>
@@ -20,7 +20,7 @@
                                     <input class="form-control" type="text" id="source_id" name="source_id" value="{{model.SourceId}}"/>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group clearfix colored-row">
                                 <div class="col-sm-8">
                                     <label for="source_type" class="control-label">Source Type</label>
                                     <p>Source type will be the type of stat data to use.  For current Eve Central data the choices are 'all', 'buy' and 'sell'.</p>
@@ -29,7 +29,7 @@
                                     <input class="form-control" type="text" id="source_type" name="source_type" value="{{model.SourceType}}"/>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group clearfix colored-row">
                                 <div class="col-sm-8">
                                     <label for="source_stat" class="control-label">Source Statistic</label>
                                     <p>Source statistic is the stat field to use.  For current Eve Central data the choices are 'avg', 'wavg', 'variance', 'max', 'min', 'stdDev', 'median' and 'fivePercent'.</p>
@@ -38,7 +38,7 @@
                                     <input class="form-control" type="text" id="source_stat" name="source_stat" value="{{model.SourceStat}}"/>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group clearfix colored-row">
                                 <div class="col-sm-8">
                                     <label for="default_tax" class="control-label">Default Buyback Tax</label>
                                     <p>This is the default buyback tax used for all Material Buyback transactions.</p>
@@ -47,7 +47,21 @@
                                     <input class="form-control" type="text" id="default_tax" name="default_tax" value="{{model.DefaultTax}}"/>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group clearfix colored-row">
+                                <div class="col-sm-8">
+                                    <label for="maintenance_mode_base" class="control-label">Enable Guest Buyback</label>
+                                    <p>This option will allow a "Sell to us without an Account!" option on the login screen for guests to sell.</p>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="checkbox icheck" style="text-align:right;margin-right:30px;">
+                                        <label>
+                                            <input type="checkbox" id="enable_guest_base" data-t="enable_guest" {{ (model.EnableGuest == "1") ? 'checked' : '' }}/>
+                                            <input type="hidden" id="enable_guest" name="enable_guest" value="{{ (model.EnableGuest == "1") ? "1" : "0" }}"/>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group clearfix colored-row">
                                 <div class="col-sm-8">
                                     <label for="default_public_stax" class="control-label">Default Public Buyback Tax</label>
                                     <p>This is the default buyback tax used for all Material Buyback transactions from Guest Accounts.</p>
@@ -56,7 +70,7 @@
                                     <input class="form-control" type="text" id="default_public_tax" name="default_public_tax" value="{{model.DefaultPublicTax}}"/>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group clearfix colored-row">
                                 <div class="col-sm-8">
                                     <label for="maintenance_mode_base" class="control-label">Value Ore by Minerals</label>
                                     <p>This option will value any item that can be reprocessed by Refining Skill by it's mineral yield at the Refining Rate listed below.</p>
@@ -70,7 +84,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group clearfix colored-row">
                                 <div class="col-sm-8">
                                     <label for="maintenance_mode_base" class="control-label">Value Salvage by Minerals</label>
                                     <p>This option will value any item that can be reprocessed by Salvaging Skill by it's mineral yield at the Refining Rate listed below.</p>
@@ -84,7 +98,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group clearfix colored-row">
                                 <div class="col-sm-8">
                                     <label for="source_id" class="control-label">Ore Refining Rate</label>
                                     <p>Lowest rate at which we refine ore at.</a>.</p>
@@ -93,7 +107,7 @@
                                     <input class="form-control" type="text" id="ore_refine_rate" name="ore_refine_rate" value="{{model.OreRefineRate}}"/>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group clearfix colored-row">
                                 <div class="col-sm-8">
                                     <label for="source_id" class="control-label">Ice Refining Rate</label>
                                     <p>Lowest rate at which we refine ice at.</a>.</p>
@@ -102,7 +116,7 @@
                                     <input class="form-control" type="text" id="ice_refine_rate" name="ice_refine_rate" value="{{model.IceRefineRate}}"/>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group clearfix colored-row">
                                 <div class="col-sm-8">
                                     <label for="source_id" class="control-label">Salvage Refining Rate</label>
                                     <p>Lowest rate at which we salvage stuff at.</a>.</p>

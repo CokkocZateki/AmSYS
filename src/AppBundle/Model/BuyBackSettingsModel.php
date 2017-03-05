@@ -142,4 +142,18 @@ class BuyBackSettingsModel
     {
         return $this->salvageRefineRate;
     }
+
+    protected $enableGuest;
+
+    public function setEnableGuest($enableGuest)
+    {
+        $this->enableGuest = $enableGuest;
+
+        return $this;
+    }
+
+    public function getEnableGuest()
+    {
+        return $this->enableGuest;
+    }
 }

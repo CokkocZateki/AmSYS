@@ -50,6 +50,7 @@ class BuyBackController extends Controller
                 $this->get("helper")->setSetting("buyback_ice_refine_rate", $request->request->get('ice_refine_rate'));
                 $this->get("helper")->setSetting("buyback_salvage_refine_rate", $request->request->get('salvage_refine_rate'));
                 $this->get("helper")->setSetting("buyback_default_public_tax", $request->request->get('default_public_tax'));
+                $this->get("helper")->setSetting("buyback_enable_guest", $request->request->get('enable_guest'));
 
                 $this->addFlash('success', "Settings saved successfully!");
             }
@@ -71,6 +72,7 @@ class BuyBackController extends Controller
         $buybacksettings->setDefaultPublicTax($this->get("helper")->getSetting("buyback_default_public_tax"));
         $buybacksettings->setIceRefineRate($this->get("helper")->getSetting("buyback_ice_refine_rate"));
         $buybacksettings->setSalvageRefineRate($this->get("helper")->getSetting("buyback_salvage_refine_rate"));
+        $buybacksettings->setEnableGuest($this->get("helper")->getSetting("buyback_enable_guest"));
 
         return $this->render('buyback/settings.html.twig', array(
             'page_name' => 'Settings', 'sub_text' => 'Buyback Settings', 'model' => $buybacksettings));
@@ -310,60 +312,64 @@ class BuyBackController extends Controller
      */
     public function guestBuybackIndexAction(Request $request)
     {
-        // Get Eve Central Online Status
-        $eveCentralOK = $this->get("helper")->getSetting("eveCentralOK");
-
-        // Create Buyback Form
-        $bb = new BuyBackModel();
-        $form = $this->createForm(BuyBackForm::class, $bb);
-
-        // Handle Form
-        $form->handleRequest($request);
-
-        // If form is valid
-        if ($form->isValid() && $form->isSubmitted())
+        if($this->get('helper')->getSetting('buyback_enable_guest') == '1')
         {
-            $types = $this->getDoctrine()->getRepository('EveBundle:TypeEntity', 'evedata');
-            $cache = $this->getDoctrine()->getRepository('AppBundle:CacheEntity', 'default');
-            $items = array();
-            $typeids = array();
+            // Get Eve Central Online Status
+            $eveCentralOK = $this->get("helper")->getSetting("eveCentralOK");
 
-            $items = $this->get('parser')->GetLineItemsFromPasteData($bb->getItems());
+            // Create Buyback Form
+            $bb = new BuyBackModel();
+            $form = $this->createForm(BuyBackForm::class, $bb);
 
-            if(!$this->get('market')->PopulateLineItems($items))
-            {
-                $template = $this->render('elements/error_modal.html.twig', Array( 'message' => "No Prices Found"));
-                return $template;
-            }
+            // Handle Form
+            $form->handleRequest($request);
 
-            //$priceLookup = $this->get('market')->GetMarketPrices($typeids);
+            // If form is valid
+            if ($form->isValid() && $form->isSubmitted()) {
+                $types = $this->getDoctrine()->getRepository('EveBundle:TypeEntity', 'evedata');
+                $cache = $this->getDoctrine()->getRepository('AppBundle:CacheEntity', 'default');
+                $items = array();
+                $typeids = array();
 
-            //if(!is_array($priceLookup)) {
+                $items = $this->get('parser')->GetLineItemsFromPasteData($bb->getItems());
+
+                if (!$this->get('market')->PopulateLineItems($items)) {
+                    $template = $this->render('elements/error_modal.html.twig', Array('message' => "No Prices Found"));
+                    return $template;
+                }
+
+                //$priceLookup = $this->get('market')->GetMarketPrices($typeids);
+
+                //if(!is_array($priceLookup)) {
 
                 //$this->addFlash('error', "No pricing information found.  Please Eve mail 'Lorvulk Ormand' in game if you feel this is in error.");
                 //return $this->redirectToRoute('guest_buyback');
-            //}
+                //}
 
-            $totalValue = 0;
+                $totalValue = 0;
 
-            foreach($items as $lineItem) {
-                //$taxAmount = ;
-                $totalValue += $lineItem->getNetPrice();
+                foreach ($items as $lineItem) {
+                    //$taxAmount = ;
+                    $totalValue += $lineItem->getNetPrice();
+                }
+
+                if ($items == null) {
+                    $this->addFlash('error', "No valid items found.  Please Eve mail 'Lorvulk Ormand' in game if you feel this is in error.");
+                    return $this->redirectToRoute('guest_buyback');
+                }
+
+                $formH = $this->createForm(BuyBackHiddenForm::class, $bb, array('action' => $this->generateUrl('guest_accept_offer')));
+                $formH->handleRequest($request);
+
+                return $this->render('buyback/step_two.html.twig', array('items' => $items, 'total' => $totalValue, 'rawitems' => $bb->getItems(), 'form' => $formH->createView()));
             }
 
-            if($items == null)
-            {
-                $this->addFlash('error', "No valid items found.  Please Eve mail 'Lorvulk Ormand' in game if you feel this is in error.");
-                return $this->redirectToRoute('guest_buyback');
-            }
+            return $this->render('buyback/index.html.twig', array('form' => $form->createView(), 'eveCentralOK' => $eveCentralOK));
+        } else {
 
-            $formH = $this->createForm(BuyBackHiddenForm::class, $bb, array( 'action' => $this->generateUrl('guest_accept_offer')));
-            $formH->handleRequest($request);
-
-            return $this->render('buyback/step_two.html.twig', array('items' => $items, 'total' => $totalValue, 'rawitems' => $bb->getItems(), 'form' => $formH->createView() ));
+            $this->addFlash('error', 'Guest Buyback is disabled!');
+            return $this->redirectToRoute('login_route');
         }
-
-        return $this->render('buyback/index.html.twig', array('form' => $form->createView(), 'eveCentralOK' => $eveCentralOK ));
     }
 
     /**

@@ -1,3 +1,33 @@
+/*Overrides*/
+.box, .login-box-body, .register-box-body
+{
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+.info-box
+{
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+.form-group.colored-row
+{
+	margin-bottom: 0px;
+	margin-left: 5px;
+	margin-right: 5px;
+	padding-top: 9px;
+}
+
+.form-group.colored-row:nth-child(odd)
+{
+	background-color: #F3F3F3;
+}
+
+.form-group.colored-row INPUT
+{
+	margin-top: 6px;
+}
+
+/*Site Styles*/
 #subsystem_status
 {
 	list-style: none;
